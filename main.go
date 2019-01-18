@@ -4,6 +4,7 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -11,9 +12,21 @@ import (
 )
 
 func main() {
-	certBlocks := pemFileToBlocks(os.Args[1])
-	intCertBlocks := pemFileToBlocks(os.Args[2])
-	keyBlocks := pemFileToBlocks(os.Args[3])
+	keyPtr := flag.String("key", "", "Private key file")
+	intPtr := flag.String("int", "", "Intermediate certificates file")
+
+	flag.Parse()
+
+	if flag.NArg() != 1 {
+		fmt.Printf("Usage: %s [OPTIONS...] [Certificate File]\n\n", os.Args[0])
+		flag.PrintDefaults()
+		fmt.Printf("\nExample: %s --key example.com.key --int intermediates.crt example.com.crt\n", os.Args[0])
+		os.Exit(1)
+	}
+
+	certBlocks := pemFileToBlocks(flag.Arg(0))
+	intCertBlocks := pemFileToBlocks(*intPtr)
+	keyBlocks := pemFileToBlocks(*keyPtr)
 
 	cert := parseCertificate(certBlocks[0].Bytes)
 
