@@ -44,8 +44,8 @@ func main() {
 	} else {
 		fmt.Println("Certificate chain is valid!")
 	}
-
-	fmt.Printf("%+v", privateKeyCertificateMatch(keyBlocks[0], cert))
+	fmt.Printf("Certificate valid from: %s to %s\n", cert.NotBefore.Format("2006-01-02"), cert.NotAfter.Format("2006-01-02"))
+	privateKeyCertificateMatch(keyBlocks[0], cert)
 
 }
 
